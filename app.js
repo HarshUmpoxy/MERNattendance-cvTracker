@@ -18,7 +18,7 @@ app.use(express.json());
 
 app.use(require('./router/auth'));
 
-const PORT=process.env.PORT;
+const PORT=process.env.PORT || 5000;
 
 
 //to check that login is done before user requesting about page, invalid demand..//
@@ -50,7 +50,14 @@ app.get('/signup',(req,res)=>{
 // app.get('/attendance',(req,res)=>{
 //     res.send(`hello world from the attendance`);
 // });
-
+//heroku step 3
+if(process.env.NODE_ENV=="production"){
+    app.use(express.static("client/build"));
+    const path=require("path");
+    app.get("*",(req,res)=>{
+        res.sendFile(path.resolve(__dirname,'client','build','index.html'));
+    })
+}
 app.listen(PORT,()=>{
     console.log(`server is running at port ${PORT}`);
 })
